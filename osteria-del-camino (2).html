@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Osteria del Camino — Cucina Calabrese dal 1987</title>
+<meta name="description" content="Osteria del Camino, autentica cucina calabrese nel cuore di Cosenza. Prenotazioni online, menù stagionale, vini del territorio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --nero:    #0f0e0c;
+    --fumo:    #1a1916;
+    --carbone: #2c2a26;
+    --pietra:  #5a5650;
+    --sabbia:  #c9b99a;
+    --crema:   #f0e8d8;
+    --bianco:  #faf8f4;
+    --brace:   #b84b2a;
+    --brace-h: #d45a35;
+    --oro:     #c9970c;
+    --r: 0px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--nero);
+    color: var(--crema);
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.4s, padding 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(15,14,12,0.96);
+    backdrop-filter: blur(12px);
+    padding: 14px 48px;
+    border-bottom: 1px solid rgba(201,185,154,0.15);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    color: var(--sabbia);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--brace); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sabbia);
+    text-decoration: none;
+    opacity: 0.75;
+    transition: opacity 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; }
+  .nav-cta {
+    background: var(--brace);
+    color: var(--bianco) !important;
+    opacity: 1 !important;
+    padding: 10px 22px;
+    border-radius: 2px;
+    font-weight: 500 !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--brace-h) !important; }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse at 60% 40%, rgba(184,75,42,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse at 20% 80%, rgba(201,151,12,0.08) 0%, transparent 50%),
+      linear-gradient(180deg, rgba(15,14,12,0.3) 0%, rgba(15,14,12,0.7) 100%);
+  }
+
+  /* Animated embers */
+  .embers { position: absolute; inset: 0; pointer-events: none; }
+  .ember {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: var(--oro);
+    border-radius: 50%;
+    animation: rise linear infinite;
+    opacity: 0;
+  }
+  @keyframes rise {
+    0%   { transform: translateY(0) translateX(0); opacity: 0; }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.4; }
+    100% { transform: translateY(-120vh) translateX(var(--drift)); opacity: 0; }
+  }
+
+  .hero-content {
+    position: relative;
+    text-align: center;
+    padding: 0 24px;
+    max-width: 860px;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brace);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 9vw, 96px);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: var(--bianco);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.5s forwards;
+  }
+  .hero-title em { color: var(--sabbia); font-style: italic; }
+  .hero-sub {
+    font-size: 17px;
+    color: var(--sabbia);
+    opacity: 0;
+    animation: fadeUp 0.9s 0.7s forwards;
+    margin-bottom: 44px;
+    font-weight: 300;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.9s forwards;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .btn-primary {
+    background: var(--brace);
+    color: var(--bianco);
+    padding: 15px 36px;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s, transform 0.15s;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+  }
+  .btn-primary:hover { background: var(--brace-h); transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--sabbia);
+    padding: 14px 36px;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid rgba(201,185,154,0.4);
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.2s, color 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-outline:hover { border-color: var(--sabbia); color: var(--bianco); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--pietra);
+    animation: fadeUp 1s 1.2s both;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, var(--pietra), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 100px 48px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brace);
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--bianco);
+    margin-bottom: 20px;
+  }
+  .section-title em { color: var(--sabbia); font-style: italic; }
+  .section-body {
+    font-size: 16px;
+    color: var(--sabbia);
+    max-width: 560px;
+    line-height: 1.8;
+  }
+
+  /* ── CHI SIAMO ── */
+  #storia {
+    background: var(--fumo);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 100px 48px;
+  }
+  .storia-img {
+    aspect-ratio: 4/5;
+    background: var(--carbone);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  /* Finto canvas fotografico con CSS */
+  .storia-img::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(184,75,42,0.3) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 70%, rgba(201,151,12,0.15) 0%, transparent 40%),
+      linear-gradient(135deg, #2c2016 0%, #1a1208 50%, #0f0a06 100%);
+  }
+  .storia-img::after {
+    content: '1987';
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px;
+    font-weight: 300;
+    color: rgba(201,185,154,0.12);
+    line-height: 1;
+  }
+  .storia-text .divider {
+    width: 48px;
+    height: 1px;
+    background: var(--brace);
+    margin: 28px 0;
+  }
+  .storia-stat {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 40px;
+  }
+  .stat-item {}
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 300;
+    color: var(--sabbia);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--pietra);
+    margin-top: 4px;
+  }
+
+  /* ── MENU ── */
+  #menu {
+    background: var(--nero);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .menu-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .menu-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid rgba(201,185,154,0.15);
+    margin-bottom: 52px;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    padding: 14px 28px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--pietra);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .tab-btn.active { color: var(--sabbia); border-bottom-color: var(--brace); }
+  .tab-btn:hover { color: var(--crema); }
+
+  .menu-panel { display: none; }
+  .menu-panel.active { display: block; }
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1px;
+    background: rgba(201,185,154,0.08);
+  }
+  .menu-item {
+    background: var(--nero);
+    padding: 28px 32px;
+    transition: background 0.2s;
+  }
+  .menu-item:hover { background: var(--fumo); }
+  .menu-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+  .menu-item-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--crema);
+  }
+  .menu-item-price {
+    font-size: 15px;
+    color: var(--brace);
+    white-space: nowrap;
+  }
+  .menu-item-desc {
+    font-size: 13px;
+    color: var(--pietra);
+    line-height: 1.6;
+  }
+  .menu-item-tag {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--oro);
+    border: 1px solid rgba(201,151,12,0.3);
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-top: 10px;
+  }
+
+  /* ── PRENOTAZIONE ── */
+  #prenotazione {
+    background: var(--fumo);
+    border-top: 1px solid rgba(201,185,154,0.08);
+  }
+  .prenotazione-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .form-group { margin-bottom: 20px; }
+  .form-group label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--pietra);
+    margin-bottom: 8px;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,185,154,0.15);
+    border-radius: 2px;
+    padding: 14px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--crema);
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: rgba(201,185,154,0.5);
+  }
+  .form-group select option { background: var(--fumo); }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 40px;
+    border: 1px solid rgba(201,151,12,0.3);
+    border-radius: 2px;
+  }
+  .form-success .check {
+    font-size: 36px;
+    color: var(--oro);
+    margin-bottom: 16px;
+  }
+  .form-success h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    margin-bottom: 8px;
+  }
+  .form-success p { color: var(--sabbia); font-size: 14px; }
+
+  .prenotazione-info { padding-top: 12px; }
+  .info-item {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+    align-items: flex-start;
+  }
+  .info-icon {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(201,185,154,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+  .info-text h4 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--crema);
+    margin-bottom: 4px;
+  }
+  .info-text p { font-size: 13px; color: var(--pietra); line-height: 1.6; }
+  .info-divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(201,185,154,0.08);
+    margin: 36px 0;
+  }
+
+  /* ── GALLERY ── */
+  #gallery {
+    background: var(--nero);
+    padding: 100px 0;
+  }
+  .gallery-label {
+    padding: 0 48px;
+    margin-bottom: 40px;
+  }
+  .gallery-track {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0 48px;
+  }
+  .gallery-track::-webkit-scrollbar { display: none; }
+  .gallery-item {
+    flex-shrink: 0;
+    width: 320px;
+    height: 420px;
+    background: var(--carbone);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  /* Placeholder visivi con colori/gradienti diversi per ogni item */
+  .gallery-item:nth-child(1) { background: linear-gradient(145deg, #2a1a0a, #4a2810); }
+  .gallery-item:nth-child(2) { background: linear-gradient(145deg, #1a0f0a, #3d1e12); }
+  .gallery-item:nth-child(3) { background: linear-gradient(145deg, #0a1a0a, #1a3a18); }
+  .gallery-item:nth-child(4) { background: linear-gradient(145deg, #1a1a0a, #3a3010); }
+  .gallery-item:nth-child(5) { background: linear-gradient(145deg, #1a0a0a, #3a1010); }
+  .gallery-item .gallery-caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 24px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--crema);
+    font-style: italic;
+  }
+  .gallery-item .gallery-visual {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+    opacity: 0.25;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--fumo);
+    border-top: 1px solid rgba(201,185,154,0.08);
+    padding: 64px 48px 32px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 48px;
+  }
+  .footer-brand .nav-logo { display: block; margin-bottom: 16px; font-size: 20px; }
+  .footer-brand p { font-size: 13px; color: var(--pietra); line-height: 1.7; max-width: 260px; }
+  .footer-col h5 {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--brace);
+    margin-bottom: 16px;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col li { margin-bottom: 10px; }
+  .footer-col a {
+    font-size: 13px;
+    color: var(--pietra);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--sabbia); }
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    border-top: 1px solid rgba(201,185,154,0.08);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-bottom p { font-size: 12px; color: var(--pietra); }
+  .footer-bottom a { color: var(--pietra); text-decoration: none; }
+
+  /* ── REVEAL ANIMATION ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    nav { padding: 18px 20px; }
+    nav.scrolled { padding: 12px 20px; }
+    .nav-links { display: none; }
+    section { padding: 72px 20px; }
+    #storia { grid-template-columns: 1fr; gap: 48px; padding: 72px 20px; }
+    .storia-img { aspect-ratio: 3/2; }
+    .prenotazione-inner { grid-template-columns: 1fr; gap: 48px; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    .footer-brand { grid-column: 1 / -1; }
+    .form-row { grid-template-columns: 1fr; }
+    .gallery-item { width: 260px; height: 340px; }
+    .gallery-track { padding: 0 20px; }
+    .gallery-label { padding: 0 20px; }
+    footer { padding: 48px 20px 24px; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  /* ── ORDINA SECTION ── */
+  #ordina { background: var(--fumo); border-top: 1px solid rgba(201,185,154,0.08); }
+  #ordina .ordina-inner { max-width: 1200px; margin: 0 auto; }
+
+  .ordina-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 48px;
+    align-items: start;
+    margin-top: 48px;
+  }
+
+  /* Orario ritiro */
+  .ritiro-bar {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    margin-bottom: 32px; align-items: center;
+  }
+  .ritiro-bar label { font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--pietra); }
+  .ritiro-bar select, .ritiro-bar input {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,185,154,0.15);
+    border-radius: 2px; padding: 10px 14px;
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    color: var(--crema); outline: none;
+    transition: border-color 0.2s; -webkit-appearance: none;
+  }
+  .ritiro-bar select:focus, .ritiro-bar input:focus { border-color: rgba(201,185,154,0.5); }
+  .ritiro-bar select option { background: var(--fumo); }
+
+  /* Categorie ordine */
+  .ordina-cats { display: flex; gap: 0; border-bottom: 1px solid rgba(201,185,154,0.12); margin-bottom: 28px; }
+  .ocat-btn {
+    background: none; border: none; padding: 12px 22px;
+    font-family: 'Inter', sans-serif; font-size: 12px;
+    letter-spacing: .15em; text-transform: uppercase;
+    color: var(--pietra); cursor: pointer;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: color .2s, border-color .2s;
+  }
+  .ocat-btn.active { color: var(--sabbia); border-bottom-color: var(--brace); }
+  .ocat-btn:hover { color: var(--crema); }
+  .ocat-panel { display: none; }
+  .ocat-panel.active { display: block; }
+
+  /* Piatti ordinabili */
+  .dish-list { display: flex; flex-direction: column; gap: 2px; }
+  .dish-row {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--nero); padding: 16px 20px;
+    transition: background .2s; border-radius: 2px;
+  }
+  .dish-row:hover { background: var(--carbone); }
+  .dish-info { flex: 1; }
+  .dish-name { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--crema); }
+  .dish-desc { font-size: 12px; color: var(--pietra); margin-top: 2px; line-height: 1.5; }
+  .dish-price { font-size: 14px; color: var(--brace); white-space: nowrap; margin-right: 4px; }
+  .qty-ctrl { display: flex; align-items: center; gap: 8px; }
+  .qty-btn {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1px solid rgba(201,185,154,0.25);
+    background: transparent; color: var(--sabbia);
+    font-size: 16px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    transition: background .2s, border-color .2s; line-height: 1;
+  }
+  .qty-btn:hover { background: rgba(201,185,154,0.1); border-color: var(--sabbia); }
+  .qty-num { font-size: 14px; color: var(--crema); min-width: 16px; text-align: center; }
+
+  /* Carrello sticky */
+  .cart-box {
+    background: var(--nero);
+    border: 1px solid rgba(201,185,154,0.12);
+    border-radius: 2px;
+    padding: 28px 24px;
+    position: sticky; top: 88px;
+  }
+  .cart-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 400; color: var(--bianco);
+    margin-bottom: 20px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .cart-badge {
+    background: var(--brace); color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; font-weight: 500;
+    padding: 2px 8px; border-radius: 99px;
+  }
+  .cart-empty { font-size: 13px; color: var(--pietra); text-align: center; padding: 32px 0; }
+  .cart-items { margin-bottom: 16px; }
+  .cart-item {
+    display: flex; justify-content: space-between;
+    align-items: center; padding: 10px 0;
+    border-bottom: 1px solid rgba(201,185,154,0.08);
+    gap: 8px;
+  }
+  .cart-item-name { font-size: 13px; color: var(--crema); flex: 1; }
+  .cart-item-qty { font-size: 12px; color: var(--pietra); }
+  .cart-item-sub { font-size: 13px; color: var(--sabbia); white-space: nowrap; }
+  .cart-item-rm {
+    background: none; border: none; color: var(--pietra);
+    cursor: pointer; font-size: 14px; padding: 0 4px;
+    transition: color .2s;
+  }
+  .cart-item-rm:hover { color: var(--brace); }
+  .cart-divider { height: 1px; background: rgba(201,185,154,0.12); margin: 16px 0; }
+  .cart-total {
+    display: flex; justify-content: space-between;
+    font-size: 15px; color: var(--bianco); margin-bottom: 20px;
+  }
+  .cart-total span:last-child { color: var(--sabbia); font-weight: 500; }
+
+  /* Form checkout nel carrello */
+  .checkout-fields { margin-bottom: 16px; }
+  .checkout-fields .form-group { margin-bottom: 12px; }
+  .checkout-fields label { font-size: 10px; letter-spacing:.2em; text-transform:uppercase; color:var(--pietra); display:block; margin-bottom:6px; }
+  .checkout-fields input, .checkout-fields select {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,185,154,0.15);
+    border-radius: 2px; padding: 11px 14px;
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    color: var(--crema); outline: none;
+    transition: border-color .2s; -webkit-appearance: none;
+  }
+  .checkout-fields input:focus, .checkout-fields select:focus { border-color: rgba(201,185,154,0.4); }
+  .checkout-fields select option { background: var(--fumo); }
+
+  .pay-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+  .pay-opt {
+    border: 1px solid rgba(201,185,154,0.15);
+    border-radius: 2px; padding: 10px 12px;
+    cursor: pointer; text-align: center;
+    font-size: 12px; color: var(--pietra);
+    transition: border-color .2s, color .2s, background .2s;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+  }
+  .pay-opt.selected { border-color: var(--brace); color: var(--sabbia); background: rgba(184,75,42,0.08); }
+  .pay-opt-icon { font-size: 18px; display: block; margin-bottom: 4px; }
+
+  .order-success {
+    display: none; text-align: center; padding: 32px 0;
+  }
+  .order-success .check { font-size: 36px; color: var(--oro); margin-bottom: 12px; }
+  .order-success h3 { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:300; margin-bottom:8px; }
+  .order-success p { font-size:13px; color:var(--sabbia); line-height:1.7; }
+
+  #cart-error { display:none; font-size:12px; color:#e05a3a; margin-bottom:10px; text-align:center; }
+
+  @media (max-width: 768px) {
+    .ordina-grid { grid-template-columns: 1fr; }
+    .cart-box { position: static; }
+    .pay-options { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Osteria <span>del Camino</span></a>
+  <ul class="nav-links">
+    <li><a href="#storia">La Storia</a></li>
+    <li><a href="#menu">Il Menù</a></li>
+    <li><a href="#ordina">Ordina</a></li>
+    <li><a href="#gallery">Galleria</a></li>
+    <li><a href="#prenotazione" class="nav-cta">Prenota</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="embers" id="embers"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Cosenza, Calabria — Dal 1987</p>
+    <h1 class="hero-title">Dove il fuoco<br><em>racconta</em> la Calabria</h1>
+    <p class="hero-sub">Cucina di territorio, vini naturali, ospitalità autentica.<br>Ogni piatto è una memoria che diventa presente.</p>
+    <div class="hero-actions">
+      <a href="#prenotazione" class="btn-primary">Prenota un tavolo</a>
+      <a href="#menu" class="btn-outline">Scopri il menù</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scorri
+  </div>
+</section>
+
+<!-- STORIA -->
+<div style="background: var(--fumo);">
+<div id="storia" class="reveal">
+  <div class="storia-img"></div>
+  <div class="storia-text">
+    <p class="section-label">La nostra storia</p>
+    <h2 class="section-title">Tre generazioni<br><em>di brace accesa</em></h2>
+    <div class="divider"></div>
+    <p class="section-body">
+      Nel 1987 Salvatore e Rosa Ferraro aprirono un'osteria con cinque tavoli e un camino che non si è mai spento.
+      Oggi quella stessa brace scalda le nostre 'nduje, i ferri della carne e il pane fatto ogni mattina.
+    </p>
+    <p class="section-body" style="margin-top: 16px;">
+      Cuciniamo con quello che la Calabria ci dà: peperoncino di Tropea, bergamotto di Reggio, funghi della Sila,
+      pesce del Tirreno. Niente di più, niente di meno.
+    </p>
+    <div class="storia-stat">
+      <div class="stat-item">
+        <div class="stat-num">37</div>
+        <div class="stat-label">anni di storia</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3</div>
+        <div class="stat-label">generazioni</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">prodotti locali</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">5</div>
+        <div class="stat-label">tavoli originali</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="menu-header reveal">
+    <div>
+      <p class="section-label">Cucina</p>
+      <h2 class="section-title">Il <em>Menù</em></h2>
+    </div>
+    <p style="font-size:13px; color:var(--pietra); max-width:280px; line-height:1.7;">
+      Proposta stagionale. I piatti cambiano seguendo il mercato e la terra. Allergeni disponibili su richiesta.
+    </p>
+  </div>
+
+  <div class="menu-tabs reveal">
+    <button class="tab-btn active" data-tab="antipasti">Antipasti</button>
+    <button class="tab-btn" data-tab="primi">Primi</button>
+    <button class="tab-btn" data-tab="secondi">Secondi</button>
+    <button class="tab-btn" data-tab="dolci">Dolci</button>
+    <button class="tab-btn" data-tab="vini">Vini</button>
+  </div>
+
+  <div id="antipasti" class="menu-panel active">
+    <div class="menu-grid">
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Tagliere della tradizione</span>
+          <span class="menu-item-price">€ 14</span>
+        </div>
+        <p class="menu-item-desc">'Nduja di Spilinga, soppressata calabrese, capocollo, olive infornate, provolone piccante e pane casereccio.</p>
+        <span class="menu-item-tag">Per due</span>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Frittole di maiale</span>
+          <span class="menu-item-price">€ 9</span>
+        </div>
+        <p class="menu-item-desc">Ciccioli croccanti fritti nello strutto, sale grosso, peperoncino rosso di Calabria. Ricetta di Salvatore.</p>
+        <span class="menu-item-tag">Signature</span>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Pitta 'mpigliata</span>
+          <span class="menu-item-price">€ 8</span>
+        </div>
+        <p class="menu-item-desc">Focaccia ripiena di cipolla di Tropea caramellata, acciughe del Cantabrico, origano selvatico della Sila.</p>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Mazzancolla alla brace</span>
+          <span class="menu-item-price">€ 16</span>
+        </div>
+        <p class="menu-item-desc">Gamberi del Tirreno scottati sul camino, olio evo biologico, agrumi di Reggio Calabria, fiocchi di sale.</p>
+        <span class="menu-item-tag">Stagionale</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="primi" class="menu-panel">
+    <div class="menu-grid">
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Fileja al ragù di capra</span>
+          <span class="menu-item-price">€ 14</span>
+        </div>
+        <p class="menu-item-desc">Pasta fresca fatta a mano, ragù lento di capra del Pollino, peperoncino dolce, ricotta salata di pecora.</p>
+        <span class="menu-item-tag">Signature</span>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Lagane e ceci</span>
+          <span class="menu-item-price">€ 11</span>
+        </div>
+        <p class="menu-item-desc">Pasta larga all'uovo con ceci neri della Sila, rosmarino fresco, aglio, olio extravergine di Brancaleone.</p>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Risotto al bergamotto</span>
+          <span class="menu-item-price">€ 15</span>
+        </div>
+        <p class="menu-item-desc">Carnaroli mantecato con scorza di bergamotto IGP di Reggio, tartare di gambero crudo, pistacchio di Bronte.</p>
+        <span class="menu-item-tag">Stagionale</span>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Minestra di scarola</span>
+          <span class="menu-item-price">€ 10</span>
+        </div>
+        <p class="menu-item-desc">Zuppa povera della tradizione con scarola, fagioli borlotti, 'nduja sciolta, pane bruschettato e olio nuovo.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="secondi" class="menu-panel">
+    <div class="menu-grid">
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Agnello al camino</span>
+          <span class="menu-item-price">€ 22</span>
+        </div>
+        <p class="menu-item-desc">Costolette di agnello del Pollino cotte lentamente sulla brace di legno di ulivo, erbe aromatiche, limone.</p>
+        <span class="menu-item-tag">Signature</span>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Baccalà alla cosentina</span>
+          <span class="menu-item-price">€ 18</span>
+        </div>
+        <p class="menu-item-desc">Merluzzo sotto sale ammollato 48 ore, fritto in pastella leggera, salsa di pomodoro piccante, capperi e olive.</p>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Maiale nero calabrese</span>
+          <span class="menu-item-price">€ 24</span>
+        </div>
+        <p class="menu-item-desc">Lombata di suino nero allevato allo stato brado, marinatura di peperoncino, mirto e origano, brace viva.</p>
+        <span class="menu-item-tag">Weekend</span>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Totani ripieni</span>
+          <span class="menu-item-price">€ 19</span>
+        </div>
+        <p class="menu-item-desc">Calamari freschi del Tirreno ripieni di mollica, uvetta, pinoli e prezzemolo, in sugo di pomodoro del pendolo.</p>
+        <span class="menu-item-tag">Stagionale</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="dolci" class="menu-panel">
+    <div class="menu-grid">
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Pitta 'mpigliata dolce</span>
+          <span class="menu-item-price">€ 6</span>
+        </div>
+        <p class="menu-item-desc">Dolce natalizio di San Giovanni in Fiore, pasta frolla ripiena di fichi secchi, noci, uvetta e miele di zagara.</p>
+        <span class="menu-item-tag">Tradizione</span>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Gelato al bergamotto</span>
+          <span class="menu-item-price">€ 5</span>
+        </div>
+        <p class="menu-item-desc">Mantecato artigianale con bergamotto IGP, latte intero biologico, senza addensanti. Fatto ogni mattina.</p>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Torta di ricotta</span>
+          <span class="menu-item-price">€ 7</span>
+        </div>
+        <p class="menu-item-desc">Ricotta di pecora fresca, scorza d'arancia, cannella, pistacchio. Ricetta della nonna Rosa, invariata dal 1987.</p>
+        <span class="menu-item-tag">Signature</span>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Formaggi del territorio</span>
+          <span class="menu-item-price">€ 12</span>
+        </div>
+        <p class="menu-item-desc">Selezione di tre formaggi calabresi: pecorino crotonese stagionato, caciocavallo silano DOP, ricotta affumicata.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="vini" class="menu-panel">
+    <div class="menu-grid">
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Cirò Rosso Classico DOC</span>
+          <span class="menu-item-price">€ 22</span>
+        </div>
+        <p class="menu-item-desc">Gaglioppo in purezza, Librandi. Note di ciliegia, spezie e tabacco. Abbinamento ideale con le carni alla brace.</p>
+        <span class="menu-item-tag">Bottiglia</span>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Greco di Bianco DOC</span>
+          <span class="menu-item-price">€ 28</span>
+        </div>
+        <p class="menu-item-desc">Passito raro e prezioso, uve Greco surmature. Miele, albicocca, zenzero candito. Perfetto con i dolci.</p>
+        <span class="menu-item-tag">Raro</span>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Vino della casa — Rosso</span>
+          <span class="menu-item-price">€ 4 / calice</span>
+        </div>
+        <p class="menu-item-desc">Gaglioppo e Nerello da vigneto di proprietà, affinamento in anfora. Schietto, territoriale, senza compromessi.</p>
+      </div>
+      <div class="menu-item">
+        <div class="menu-item-header">
+          <span class="menu-item-name">Amaro del Camino</span>
+          <span class="menu-item-price">€ 5</span>
+        </div>
+        <p class="menu-item-desc">Liquore di erbe calabresi preparato in casa: liquirizia di Calabria, bergamotto, genziana, china. Ricetta segreta.</p>
+        <span class="menu-item-tag">Fatto in casa</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORDINA -->
+<section id="ordina">
+<div class="ordina-inner">
+  <div class="reveal">
+    <p class="section-label">Asporto</p>
+    <h2 class="section-title">Ordina e <em>ritira</em></h2>
+    <p class="section-body">Scegli i piatti, indica l'orario di ritiro e il metodo di pagamento. Riceverai conferma via email e WhatsApp.</p>
+  </div>
+
+  <div class="ordina-grid">
+    <!-- SINISTRA: piatti -->
+    <div>
+      <div class="ritiro-bar reveal">
+        <div>
+          <label>Orario ritiro</label><br>
+          <select id="ord-ora">
+            <option value="">Scegli orario</option>
+            <option>12:30</option><option>13:00</option><option>13:30</option><option>14:00</option>
+            <option>19:30</option><option>20:00</option><option>20:30</option><option>21:00</option><option>21:30</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="ordina-cats reveal">
+        <button class="ocat-btn active" data-ocat="oant">Antipasti</button>
+        <button class="ocat-btn" data-ocat="opri">Primi</button>
+        <button class="ocat-btn" data-ocat="osec">Secondi</button>
+        <button class="ocat-btn" data-ocat="odol">Dolci</button>
+      </div>
+
+      <!-- ANTIPASTI -->
+      <div id="oant" class="ocat-panel active">
+        <div class="dish-list">
+          <div class="dish-row">
+            <div class="dish-info">
+              <div class="dish-name">Tagliere della tradizione</div>
+              <div class="dish-desc">'Nduja, soppressata, capocollo, olive, provolone, pane casereccio</div>
+            </div>
+            <span class="dish-price">€ 14</span>
+            <div class="qty-ctrl">
+              <button class="qty-btn" data-action="dec" data-id="ant1">−</button>
+              <span class="qty-num" id="q-ant1">0</span>
+              <button class="qty-btn" data-action="inc" data-id="ant1" data-name="Tagliere della tradizione" data-price="14">+</button>
+            </div>
+          </div>
+          <div class="dish-row">
+            <div class="dish-info">
+              <div class="dish-name">Frittole di maiale</div>
+              <div class="dish-desc">Ciccioli croccanti, peperoncino rosso di Calabria</div>
+            </div>
+            <span class="dish-price">€ 9</span>
+            <div class="qty-ctrl">
+              <button class="qty-btn" data-action="dec" data-id="ant2">−</button>
+              <span class="qty-num" id="q-ant2">0</span>
+              <button class="qty-btn" data-action="inc" data-id="ant2" data-name="Frittole di maiale" data-price="9">+</button>
+            </div>
+          </div>
+          <div class="dish-row">
+            <div class="dish-info">
+              <div class="dish-name">Pitta 'mpigliata</div>
+              <div class="dish-desc">Focaccia, cipolla di Tropea, acciughe, origano della Sila</div>
+            </div>
+            <span class="dish-price">€ 8</span>
+            <div class="qty-ctrl">
+              <button class="qty-btn" data-action="dec" data-id="ant3">−</button>
+              <span class="qty-num" id="q-ant3">0</span>
+              <button class="qty-btn" data-action="inc" data-id="ant3" data-name="Pitta 'mpigliata" data-price="8">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRIMI -->
+      <div id="opri" class="ocat-panel">
+        <div class="dish-list">
+          <div class="dish-row">
+            <div class="dish-info">
+              <div class="dish-name">Fileja al ragù di capra</div>
+              <div class="dish-desc">Pasta fresca, ragù lento di capra, peperoncino, ricotta salata</div>
+            </div>
+            <span class="dish-price">€ 14</span>
+            <div class="qty-ctrl">
+              <button class="qty-btn" data-action="dec" data-id="pri1">−</button>
+              <span class="qty-num" id="q-pri1">0</span>
+              <button class="qty-btn" data-action="inc" data-id="pri1" data-name="Fileja al ragù di capra" data-price="14">+</button>
+            </div>
+          </div>
+          <div class="dish-row">
+            <div class="dish-info">
+              <div class="dish-name">Lagane e ceci</div>
+              <div class="dish-desc">Pasta larga, ceci neri della Sila, rosmarino, olio di Brancaleone</div>
+            </div>
+            <span class="dish-price">€ 11</span>
+            <div class="qty-ctrl">
+              <button class="qty-btn" data-action="dec" data-id="pri2">−</button>
+              <span class="qty-num" id="q-pri2">0</span>
+              <button class="qty-btn" data-action="inc" data-id="pri2" data-name="Lagane e ceci" data-price="11">+</button>
+            </div>
+          </div>
+          <div class="dish-row">
+            <div class="dish-info">
+              <div class="dish-name">Risotto al bergamotto</div>
+              <div class="dish-desc">Carnaroli, bergamotto IGP, gambero crudo, pistacchio di Bronte</div>
+            </div>
+            <span class="dish-price">€ 15</span>
+            <div class="qty-ctrl">
+              <button class="qty-btn" data-action="dec" data-id="pri3">−</button>
+              <span class="qty-num" id="q-pri3">0</span>
+              <button class="qty-btn" data-action="inc" data-id="pri3" data-name="Risotto al bergamotto" data-price="15">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECONDI -->
+      <div id="osec" class="ocat-panel">
+        <div class="dish-list">
+          <div class="dish-row">
+            <div class="dish-info">
+              <div class="dish-name">Agnello al camino</div>
+              <div class="dish-desc">Costolette del Pollino, brace di ulivo, erbe aromatiche</div>
+            </div>
+            <span class="dish-price">€ 22</span>
+            <div class="qty-ctrl">
+              <button class="qty-btn" data-action="dec" data-id="sec1">−</button>
+              <span class="qty-num" id="q-sec1">0</span>
+              <button class="qty-btn" data-action="inc" data-id="sec1" data-name="Agnello al camino" data-price="22">+</button>
+            </div>
+          </div>
+          <div class="dish-row">
+            <div class="dish-info">
+              <div class="dish-name">Baccalà alla cosentina</div>
+              <div class="dish-desc">Merluzzo in pastella, salsa piccante, capperi, olive</div>
+            </div>
+            <span class="dish-price">€ 18</span>
+            <div class="qty-ctrl">
+              <button class="qty-btn" data-action="dec" data-id="sec2">−</button>
+              <span class="qty-num" id="q-sec2">0</span>
+              <button class="qty-btn" data-action="inc" data-id="sec2" data-name="Baccalà alla cosentina" data-price="18">+</button>
+            </div>
+          </div>
+          <div class="dish-row">
+            <div class="dish-info">
+              <div class="dish-name">Maiale nero calabrese</div>
+              <div class="dish-desc">Lombata di suino nero, peperoncino, mirto, origano, brace viva</div>
+            </div>
+            <span class="dish-price">€ 24</span>
+            <div class="qty-ctrl">
+              <button class="qty-btn" data-action="dec" data-id="sec3">−</button>
+              <span class="qty-num" id="q-sec3">0</span>
+              <button class="qty-btn" data-action="inc" data-id="sec3" data-name="Maiale nero calabrese" data-price="24">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOLCI -->
+      <div id="odol" class="ocat-panel">
+        <div class="dish-list">
+          <div class="dish-row">
+            <div class="dish-info">
+              <div class="dish-name">Pitta 'mpigliata dolce</div>
+              <div class="dish-desc">Pasta frolla, fichi secchi, noci, uvetta, miele di zagara</div>
+            </div>
+            <span class="dish-price">€ 6</span>
+            <div class="qty-ctrl">
+              <button class="qty-btn" data-action="dec" data-id="dol1">−</button>
+              <span class="qty-num" id="q-dol1">0</span>
+              <button class="qty-btn" data-action="inc" data-id="dol1" data-name="Pitta 'mpigliata dolce" data-price="6">+</button>
+            </div>
+          </div>
+          <div class="dish-row">
+            <div class="dish-info">
+              <div class="dish-name">Torta di ricotta</div>
+              <div class="dish-desc">Ricotta di pecora, arancia, cannella, pistacchio — ricetta 1987</div>
+            </div>
+            <span class="dish-price">€ 7</span>
+            <div class="qty-ctrl">
+              <button class="qty-btn" data-action="dec" data-id="dol2">−</button>
+              <span class="qty-num" id="q-dol2">0</span>
+              <button class="qty-btn" data-action="inc" data-id="dol2" data-name="Torta di ricotta" data-price="7">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESTRA: carrello -->
+    <div class="cart-box">
+      <div class="cart-title">
+        Il tuo ordine
+        <span class="cart-badge" id="cart-count">0</span>
+      </div>
+
+      <div id="cart-empty" class="cart-empty">Aggiungi piatti dal menù</div>
+      <div id="cart-items" class="cart-items" style="display:none"></div>
+
+      <div id="cart-checkout" style="display:none">
+        <div class="cart-divider"></div>
+        <div class="cart-total">
+          <span>Totale</span>
+          <span id="cart-total-val">€ 0</span>
+        </div>
+
+        <div class="checkout-fields">
+          <div class="form-group">
+            <label>Il tuo nome</label>
+            <input type="text" id="ord-nome" placeholder="Mario Rossi">
+          </div>
+          <div class="form-group">
+            <label>Telefono</label>
+            <input type="tel" id="ord-tel" placeholder="+39 340 000 0000">
+          </div>
+          <div class="form-group">
+            <label>Email (per la conferma)</label>
+            <input type="email" id="ord-email" placeholder="mario@email.it">
+          </div>
+          <div class="form-group">
+            <label>Note all'ordine</label>
+            <input type="text" id="ord-note" placeholder="Es. senza peperoncino">
+          </div>
+        </div>
+
+        <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--pietra);margin-bottom:10px;">Pagamento</div>
+        <div class="pay-options">
+          <button class="pay-opt selected" data-pay="contanti">
+            <span class="pay-opt-icon">💵</span>Contanti
+          </button>
+          <button class="pay-opt" data-pay="pos">
+            <span class="pay-opt-icon">💳</span>POS al ritiro
+          </button>
+        </div>
+
+        <p id="cart-error"></p>
+        <button class="btn-primary" id="order-submit" style="width:100%;">Invia ordine</button>
+      </div>
+
+      <div class="order-success" id="order-success">
+        <div class="check">✦</div>
+        <h3>Ordine ricevuto!</h3>
+        <p id="order-success-msg">Prepareremo tutto per l'orario scelto.<br>Riceverai conferma via email e WhatsApp.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- GALLERY -->
+<div id="gallery">
+  <div class="gallery-label reveal">
+    <p class="section-label">Atmosfera</p>
+    <h2 class="section-title">I nostri <em>spazi</em></h2>
+  </div>
+  <div class="gallery-track">
+    <div class="gallery-item">
+      <div class="gallery-visual">🔥</div>
+      <div class="gallery-caption">Il camino storico</div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-visual">🍷</div>
+      <div class="gallery-caption">La cantina</div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-visual">🌿</div>
+      <div class="gallery-caption">Il giardino estivo</div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-visual">🍝</div>
+      <div class="gallery-caption">La cucina a vista</div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-visual">🫒</div>
+      <div class="gallery-caption">I prodotti della terra</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRENOTAZIONE -->
+<section id="prenotazione" style="background: var(--fumo); border-top: 1px solid rgba(201,185,154,0.08);">
+  <div class="prenotazione-inner">
+    <div>
+      <p class="section-label reveal">Prenota</p>
+      <h2 class="section-title reveal">Riserva il <em>tuo tavolo</em></h2>
+      <p class="section-body reveal" style="margin-bottom: 40px;">
+        Accettiamo prenotazioni fino alle 22:00. Per gruppi superiori a 8 persone, chiamaci direttamente.
+      </p>
+
+      <form id="bookingForm" class="reveal">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nome">Nome e cognome</label>
+            <input type="text" id="nome" placeholder="Mario Rossi" required>
+          </div>
+          <div class="form-group">
+            <label for="telefono">Telefono</label>
+            <input type="tel" id="telefono" placeholder="+39 340 000 0000" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="data">Data</label>
+            <input type="date" id="data" required>
+          </div>
+          <div class="form-group">
+            <label for="ora">Orario</label>
+            <select id="ora" required>
+              <option value="">Scegli un orario</option>
+              <option>12:30</option>
+              <option>13:00</option>
+              <option>13:30</option>
+              <option>19:30</option>
+              <option>20:00</option>
+              <option>20:30</option>
+              <option>21:00</option>
+              <option>21:30</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="persone">Numero di persone</label>
+          <select id="persone" required>
+            <option value="">Quante persone?</option>
+            <option>1 persona</option>
+            <option>2 persone</option>
+            <option>3 persone</option>
+            <option>4 persone</option>
+            <option>5 persone</option>
+            <option>6 persone</option>
+            <option>7 persone</option>
+            <option>8 persone</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="note">Note speciali (allergie, occasioni, richieste)</label>
+          <textarea id="note" placeholder="Es. Celiaci al tavolo, anniversario di matrimonio..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="email">La tua email (per la conferma)</label>
+          <input type="email" id="email" placeholder="mario@email.it" required>
+        </div>
+        <button type="submit" id="submitBtn" class="btn-primary" style="width:100%; margin-top: 8px;">
+          Conferma prenotazione
+        </button>
+        <p id="formError" style="display:none; color:#e05a3a; font-size:13px; margin-top:12px; text-align:center;"></p>
+      </form>
+
+      <div class="form-success" id="formSuccess">
+        <div class="check">✦</div>
+        <h3>Prenotazione ricevuta</h3>
+        <p>Ti confermeremo via SMS entro 30 minuti.<br>Non vediamo l'ora di accoglierti.</p>
+      </div>
+    </div>
+
+    <div class="prenotazione-info reveal">
+      <div class="info-item">
+        <div class="info-icon">🕐</div>
+        <div class="info-text">
+          <h4>Orari</h4>
+          <p>Pranzo: 12:30 – 14:30<br>Cena: 19:30 – 22:30<br>Chiuso il mercoledì</p>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">📍</div>
+        <div class="info-text">
+          <h4>Dove siamo</h4>
+          <p>Via del Camino 14, Cosenza (CS)<br>87100 — Calabria, Italia</p>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">📞</div>
+        <div class="info-text">
+          <h4>Contatti diretti</h4>
+          <p>Tel: <a href="tel:+390984000000" style="color:var(--sabbia);">0984 000 000</a><br>WhatsApp: +39 340 000 0000</p>
+        </div>
+      </div>
+      <div class="info-divider"></div>
+      <div class="info-item">
+        <div class="info-icon">🅿️</div>
+        <div class="info-text">
+          <h4>Parcheggio</h4>
+          <p>Parcheggio gratuito convenzionato a 50 metri, disponibile nei weekend fino a mezzanotte.</p>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">♿</div>
+        <div class="info-text">
+          <h4>Accessibilità</h4>
+          <p>Il locale è accessibile a persone con mobilità ridotta. Seggioloni disponibili per bambini.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">Osteria <span>del Camino</span></a>
+      <p>Cucina calabrese autentica dal 1987. Tre generazioni, una sola promessa: portarti a tavola la Calabria vera.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Navigazione</h5>
+      <ul>
+        <li><a href="#storia">La storia</a></li>
+        <li><a href="#menu">Il menù</a></li>
+        <li><a href="#gallery">Galleria</a></li>
+        <li><a href="#prenotazione">Prenota</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Info</h5>
+      <ul>
+        <li><a href="#">Allergeni</a></li>
+        <li><a href="#">Gift card</a></li>
+        <li><a href="#">Privé & eventi</a></li>
+        <li><a href="#">Lavora con noi</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Seguici</h5>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Facebook</a></li>
+        <li><a href="#">TripAdvisor</a></li>
+        <li><a href="#">Google Maps</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Osteria del Camino — P.IVA 01234567890</p>
+    <p><a href="#">Privacy Policy</a> · <a href="#">Cookie Policy</a></p>
+  </div>
+</footer>
+
+<script>
+// Embers animation
+(function() {
+  const container = document.getElementById('embers');
+  for (let i = 0; i < 18; i++) {
+    const e = document.createElement('div');
+    e.className = 'ember';
+    const left = Math.random() * 100;
+    const drift = (Math.random() - 0.5) * 80;
+    const duration = 4 + Math.random() * 6;
+    const delay = Math.random() * 8;
+    const size = 1 + Math.random() * 2.5;
+    e.style.cssText = `left:${left}%;bottom:${Math.random()*30}%;
+      --drift:${drift}px;
+      animation-duration:${duration}s;
+      animation-delay:${delay}s;
+      width:${size}px;height:${size}px;`;
+    container.appendChild(e);
+  }
+})();
+
+// Nav scroll
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Menu tabs
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ─────────────────────────────────────────────
+// CONFIGURAZIONE — sostituisci questi 4 valori
+// con i tuoi dati reali da EmailJS
+// ─────────────────────────────────────────────
+const EMAILJS_PUBLIC_KEY   = '1iwbmk3M3Ekhzb7x2';
+const EMAILJS_SERVICE_ID   = 'service_adr3anb';
+const EMAILJS_TEMPLATE_RISTORANTE    = 'template_5p1xx1u';
+const EMAILJS_TEMPLATE_CLIENTE       = 'template_92jb3vn';
+const EMAILJS_TEMPLATE_ORDINE_RIST   = 'template_5p1xx1u';
+const EMAILJS_TEMPLATE_ORDINE_CLIENTE = 'template_92jb3vn';
+const WHATSAPP_NUMBER = '393515306318'; // ← metti il tuo numero reale
+
+emailjs.init(EMAILJS_PUBLIC_KEY);
+
+// ── CARRELLO ──────────────────────────────────
+const cart = {}; // { id: { name, price, qty } }
+
+function cartTotal() {
+  return Object.values(cart).reduce((s, i) => s + i.price * i.qty, 0);
+}
+function cartCount() {
+  return Object.values(cart).reduce((s, i) => s + i.qty, 0);
+}
+
+function updateCartUI() {
+  const count = cartCount();
+  document.getElementById('cart-count').textContent = count;
+
+  const emptyEl    = document.getElementById('cart-empty');
+  const itemsEl    = document.getElementById('cart-items');
+  const checkoutEl = document.getElementById('cart-checkout');
+
+  if (count === 0) {
+    emptyEl.style.display = 'block';
+    itemsEl.style.display = 'none';
+    checkoutEl.style.display = 'none';
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  itemsEl.style.display = 'block';
+  checkoutEl.style.display = 'block';
+
+  itemsEl.innerHTML = Object.entries(cart).map(([id, item]) => `
+    <div class="cart-item">
+      <span class="cart-item-name">${item.name}</span>
+      <span class="cart-item-qty">×${item.qty}</span>
+      <span class="cart-item-sub">€ ${(item.price * item.qty).toFixed(2)}</span>
+      <button class="cart-item-rm" data-rm="${id}">✕</button>
+    </div>
+  `).join('');
+
+  document.getElementById('cart-total-val').textContent = `€ ${cartTotal().toFixed(2)}`;
+
+  // Rimuovi dal carrello (click sulla X)
+  itemsEl.querySelectorAll('.cart-item-rm').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.rm;
+      const qEl = document.getElementById(`q-${id}`);
+      delete cart[id];
+      if (qEl) qEl.textContent = '0';
+      updateCartUI();
+    });
+  });
+}
+
+// Pulsanti + / −
+document.querySelectorAll('.qty-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id     = btn.dataset.id;
+    const action = btn.dataset.action;
+    const qEl    = document.getElementById(`q-${id}`);
+
+    if (action === 'inc') {
+      const name  = btn.dataset.name;
+      const price = parseFloat(btn.dataset.price);
+      if (!cart[id]) cart[id] = { name, price, qty: 0 };
+      cart[id].qty++;
+      qEl.textContent = cart[id].qty;
+    } else {
+      if (!cart[id] || cart[id].qty === 0) return;
+      cart[id].qty--;
+      qEl.textContent = cart[id].qty;
+      if (cart[id].qty === 0) delete cart[id];
+    }
+    updateCartUI();
+  });
+});
+
+// Tabs ordina
+document.querySelectorAll('.ocat-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.ocat-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.ocat-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.ocat).classList.add('active');
+  });
+});
+
+// Selezione pagamento
+let selectedPay = 'contanti';
+document.querySelectorAll('.pay-opt').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pay-opt').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedPay = btn.dataset.pay;
+  });
+});
+
+// ── INVIO ORDINE ──────────────────────────────
+document.getElementById('order-submit').addEventListener('click', async () => {
+  const nome  = document.getElementById('ord-nome').value.trim();
+  const tel   = document.getElementById('ord-tel').value.trim();
+  const email = document.getElementById('ord-email').value.trim();
+  const ora   = document.getElementById('ord-ora').value;
+  const note  = document.getElementById('ord-note').value.trim() || 'Nessuna';
+  const errEl = document.getElementById('cart-error');
+
+  errEl.style.display = 'none';
+
+  if (!nome || !tel || !email || !ora) {
+    errEl.textContent = 'Compila tutti i campi e scegli l\'orario di ritiro.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (cartCount() === 0) {
+    errEl.textContent = 'Il carrello è vuoto.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const righeOrdine = Object.values(cart)
+    .map(i => `• ${i.name} ×${i.qty} — € ${(i.price * i.qty).toFixed(2)}`)
+    .join('\n');
+  const totale = `€ ${cartTotal().toFixed(2)}`;
+  const pagamento = selectedPay === 'contanti' ? 'Contanti al ritiro' : 'POS al ritiro';
+
+  const btn = document.getElementById('order-submit');
+  btn.textContent = 'Invio in corso…';
+  btn.disabled = true;
+
+  const params = {
+    nome, telefono: tel, email, ora_ritiro: ora,
+    ordine: righeOrdine, totale, pagamento, note,
+    ristorante: 'Osteria del Camino',
+    indirizzo: 'Via del Camino 14, Cosenza'
+  };
+
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ORDINE_RIST, params);
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ORDINE_CLIENTE, params);
+
+    // WhatsApp con riepilogo ordine
+    const msgWA = encodeURIComponent(
+      `🧾 *Nuovo ordine asporto — Osteria del Camino*\n\n` +
+      `👤 *Nome:* ${nome}\n📞 *Tel:* ${tel}\n📧 *Email:* ${email}\n` +
+      `🕐 *Ritiro alle:* ${ora}\n💳 *Pagamento:* ${pagamento}\n\n` +
+      `*Ordine:*\n${righeOrdine}\n\n` +
+      `*Totale: ${totale}*\n📝 Note: ${note}`
+    );
+    setTimeout(() => window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msgWA}`, '_blank'), 600);
+
+    // Mostra conferma
+    document.getElementById('cart-checkout').style.display = 'none';
+    document.getElementById('cart-items').style.display = 'none';
+    document.getElementById('cart-empty').style.display = 'none';
+    const successEl = document.getElementById('order-success');
+    document.getElementById('order-success-msg').innerHTML =
+      `Prepareremo il tuo ordine per le <strong>${ora}</strong>.<br>Conferma inviata a <strong>${email}</strong>.`;
+    successEl.style.display = 'block';
+
+  } catch(err) {
+    console.error(err);
+    errEl.textContent = 'Errore nell\'invio. Riprova o chiamaci al 0984 000 000.';
+    errEl.style.display = 'block';
+    btn.textContent = 'Invia ordine';
+    btn.disabled = false;
+  }
+});
+
+// ── PRENOTAZIONE ─────────────────────────────
+const minDate = new Date().toISOString().split('T')[0];
+document.getElementById('data').setAttribute('min', minDate);
+
+document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const nome    = document.getElementById('nome').value.trim();
+  const tel     = document.getElementById('telefono').value.trim();
+  const email   = document.getElementById('email').value.trim();
+  const data    = document.getElementById('data').value;
+  const ora     = document.getElementById('ora').value;
+  const persone = document.getElementById('persone').value;
+  const note    = document.getElementById('note').value.trim() || 'Nessuna';
+  if (!nome || !tel || !email || !data || !ora || !persone) return;
+
+  const dataFormattata = new Date(data).toLocaleDateString('it-IT', {
+    weekday:'long', day:'numeric', month:'long', year:'numeric'
+  });
+
+  const btn   = document.getElementById('submitBtn');
+  const errEl = document.getElementById('formError');
+  btn.textContent = 'Invio in corso…';
+  btn.disabled = true;
+  errEl.style.display = 'none';
+
+  const params = { nome, telefono: tel, email, data: dataFormattata, ora, persone, note,
+    ristorante: 'Osteria del Camino', indirizzo: 'Via del Camino 14, Cosenza' };
+
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_RISTORANTE, params);
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CLIENTE, params);
+    const msgWA = encodeURIComponent(
+      `🍽️ *Nuova prenotazione — Osteria del Camino*\n\n` +
+      `👤 *Nome:* ${nome}\n📞 *Tel:* ${tel}\n📧 *Email:* ${email}\n` +
+      `📅 *Data:* ${dataFormattata}\n🕐 *Ora:* ${ora}\n👥 *Persone:* ${persone}\n📝 *Note:* ${note}`
+    );
+    setTimeout(() => window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msgWA}`, '_blank'), 800);
+    this.style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  } catch(err) {
+    errEl.textContent = 'Errore nell\'invio. Riprova o chiamaci direttamente.';
+    errEl.style.display = 'block';
+    btn.textContent = 'Conferma prenotazione';
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
