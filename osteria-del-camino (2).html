@@ -785,10 +785,51 @@
 
   #cart-error { display:none; font-size:12px; color:#e05a3a; margin-bottom:10px; text-align:center; }
 
+  /* ── ORDINA: bottone toggle ── */
+  .ordina-toggle-wrap { text-align: center; margin-top: 8px; }
+  #ordina-content { display: none; }
+  #ordina-content.open { display: block; }
+  .ordina-toggle-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--brace); color: var(--bianco);
+    padding: 16px 40px; font-size: 13px; letter-spacing: .1em;
+    text-transform: uppercase; border: none; border-radius: 2px;
+    cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 500;
+    transition: background .2s, transform .15s;
+  }
+  .ordina-toggle-btn:hover { background: var(--brace-h); }
+  .ordina-toggle-btn .chev { transition: transform .3s; display:inline-block; }
+  .ordina-toggle-btn.open .chev { transform: rotate(180deg); }
+
   @media (max-width: 768px) {
     .ordina-grid { grid-template-columns: 1fr; }
     .cart-box { position: static; }
     .pay-options { grid-template-columns: 1fr 1fr; }
+
+    /* Hero: testo più compatto */
+    .hero-title { font-size: clamp(38px, 10vw, 56px); }
+    .hero-sub br { display: none; }
+    .hero-sub { font-size: 15px; }
+
+    /* Storia: stats più ordinate */
+    .storia-stat { gap: 16px 24px; }
+    .stat-num { font-size: 34px; }
+
+    /* Menu: card compatte, niente sprechi di spazio */
+    .menu-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; flex-wrap: nowrap; }
+    .menu-tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { padding: 10px 16px; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
+    .menu-header { margin-bottom: 32px; }
+    .menu-grid { grid-template-columns: 1fr; gap: 1px; }
+    .menu-item { padding: 18px 16px; }
+    .menu-item-name { font-size: 17px; }
+    .menu-item-desc { font-size: 12px; }
+
+    /* Ordina toggle */
+    .ordina-toggle-btn { width: 100%; justify-content: center; padding: 16px 24px; }
+    .ocat-btn { padding: 10px 16px; font-size: 11px; }
+    .dish-row { padding: 14px 16px; flex-wrap: wrap; }
+    .dish-name { font-size: 16px; }
   }
 </style>
 </head>
@@ -1071,6 +1112,14 @@
     <p class="section-body">Scegli i piatti, indica l'orario di ritiro e il metodo di pagamento. Riceverai conferma via email e WhatsApp.</p>
   </div>
 
+  <div class="ordina-toggle-wrap reveal">
+    <button class="ordina-toggle-btn" id="ordina-toggle-btn">
+      <span class="btn-label">Apri il menù ordini</span>
+      <span class="chev">▾</span>
+    </button>
+  </div>
+
+  <div id="ordina-content">
   <div class="ordina-grid">
     <!-- SINISTRA: piatti -->
     <div>
@@ -1306,6 +1355,7 @@
       </div>
     </div>
   </div>
+  </div>
 </div>
 </section>
 
@@ -1518,6 +1568,18 @@
   }
 })();
 
+// Toggle sezione ordina
+const ordinaBtn = document.getElementById('ordina-toggle-btn');
+const ordinaContent = document.getElementById('ordina-content');
+ordinaBtn.addEventListener('click', () => {
+  const isOpen = ordinaContent.classList.toggle('open');
+  ordinaBtn.classList.toggle('open', isOpen);
+  ordinaBtn.querySelector('.btn-label').textContent = isOpen ? 'Chiudi il menù ordini' : 'Apri il menù ordini';
+  if (isOpen) {
+    setTimeout(() => ordinaContent.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  }
+});
+
 // Nav scroll
 window.addEventListener('scroll', () => {
   document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
@@ -1549,7 +1611,7 @@ const EMAILJS_TEMPLATE_RISTORANTE    = 'template_5p1xx1u';
 const EMAILJS_TEMPLATE_CLIENTE       = 'template_92jb3vn';
 const EMAILJS_TEMPLATE_ORDINE_RIST   = 'template_5p1xx1u';
 const EMAILJS_TEMPLATE_ORDINE_CLIENTE = 'template_92jb3vn';
-const WHATSAPP_NUMBER = '393515306318'; // ← metti il tuo numero reale
+const WHATSAPP_NUMBER = '393400000000'; // ← metti il tuo numero reale
 
 emailjs.init(EMAILJS_PUBLIC_KEY);
 
